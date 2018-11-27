@@ -1,0 +1,35 @@
+npm install mongoose --save komutu ile kuruyoruz
+kok dizine helpers adinda bir klasor icinede db.js dosyasini olusturup
+ - db.js dosyasi icinde mongoose include edip icine veri tabani baglantilarimizi yaziyoruz
+    const mongoose = require('mongoose');
+
+    module.exports = () => {
+        mongoose.connect(process.env.DB_STRING, {  useNewUrlParser: true });
+        mongoose.set('useCreateIndex', true);//hata ile yeni yazdim
+
+        mongoose.connection.on('open', () => {
+             console.log('MongoDB: Bağlantı sağlandı.');
+        });
+        mongoose.connection.on('error', (err) => {
+            console.log('MongoDB: Error', err);
+        });
+
+        //calbeck ile cevap olaylarini promise cevirdik if yerine promise olaylari yani
+        mongoose.Promise = global.Promise;
+    };
+
+    - process.env.DB_STRING connect değerini kok dizinde .env dosyasi icinden aliyoruz
+
+app.js dosyamizda cagirip calistiriyoruz
+ - const db = require('/helpers/db')();
+
+veri tabanı tablo işlemleri icin kok dizine models adinda bir klasor aciyoruz
+    - models klasörü icine users tablomuzu olusturmak icin users.js dosyamizi aciyoruz
+
+ilgili kayitli data varsa donuyor yoksa yeni yapiyor
+    - npm install mongoose-find-or-create --save
+    veri tabani tablo model sayfalarinda cagirmamiz gerekiyor
+        - const findOrCreate = require('mongoose-find-or-create');
+        - hangi plaginde kullanacaksak belirtiyoruz: userSchema.plugin(findOrCreate);
+
+
